@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0a0f">
+<title>1MB</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--fg:#e9e7e4;--dim:#6a6a7a;--dim2:#9a9aa8;--ac:#6ee7b7;--ac2:#818cf8;--ac3:#f9a8d4;--card:rgba(255,255,255,0.035);--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12)}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;user-select:none;-webkit-user-select:none}
+.hdr{padding:16px 22px 6px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.hdr .l{display:flex;align-items:center;gap:10px}
+.logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#0a0a0f}
+.hdr h1{font-size:15px;font-weight:600;letter-spacing:0.5px;color:var(--fg)}
+.hdr .meta{font-size:10.5px;color:var(--dim);text-align:right;line-height:1.5;user-select:text;-webkit-user-select:text}
+.tabbar{display:flex;gap:8px;padding:12px 22px 14px;flex-shrink:0;flex-wrap:wrap}
+.tab{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 17px;font-size:12.5px;color:var(--dim2);cursor:pointer;transition:all .18s}
+.tab.on{color:#0a0a0f;background:linear-gradient(135deg,var(--ac),var(--ac2));border-color:transparent;font-weight:700}
+#views{flex:1;padding:0 22px 28px;overflow-y:auto}
+.view{display:none}
+.view.on{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.label{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:var(--dim);margin-bottom:9px;font-weight:600}
+.val{font-size:27px;font-weight:300;letter-spacing:-0.4px;line-height:1.15}
+.val.big{font-size:33px;font-weight:200}
+.sub{font-size:11px;color:var(--dim);margin-top:6px}
+.clock{grid-column:1/3;text-align:center;padding:24px}
+.clock .time{font-size:56px;font-weight:200;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.clock .date{font-size:13px;color:var(--dim);margin-top:6px}
+.viz{grid-column:1/3}
+.viz canvas{width:100%;height:200px;display:block;border-radius:10px;background:rgba(255,255,255,0.02)}
+.status{grid-column:1/3;display:flex;gap:8px;flex-wrap:wrap;padding-top:2px}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 13px;font-size:11px;display:flex;align-items:center;gap:6px;color:var(--dim2)}
+.chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.search{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--fg);font-size:13px;margin-bottom:14px;outline:none;user-select:text;-webkit-user-select:text}
+.search::placeholder{color:var(--dim)}
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tool{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;text-align:left;transition:transform .15s,border-color .15s;display:flex;flex-direction:column;gap:8px;color:var(--fg)}
+.tool:hover{transform:translateY(-2px);border-color:var(--ac)}
+.tool .icon{font-size:24px;line-height:1}
+.tool .name{font-size:14px;font-weight:600}
+.tool .desc{font-size:11px;color:var(--dim2);line-height:1.45}
+.modal{position:fixed;inset:0;background:rgba(5,5,10,0.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+.panel{width:100%;max-width:560px;max-height:88vh;overflow-y:auto;background:#14141c;border:1px solid var(--border2);border-radius:16px;padding:22px}
+.panel h3{font-size:16px;font-weight:600;color:var(--ac);margin-bottom:4px}
+.panel .pdesc{font-size:12px;color:var(--dim2);margin-bottom:18px;line-height:1.5}
+.panel .row{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.panel .row label{font-size:11px;color:var(--dim2);min-width:64px}
+.inp,select.inp{flex:1;background:#1d1d28;border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--fg);font-size:13px;outline:none;user-select:text;-webkit-user-select:text;min-width:0}
+.inp:focus{border-color:var(--ac)}
+.btn{background:linear-gradient(135deg,var(--ac),var(--ac2));border:none;border-radius:8px;padding:9px 16px;font-size:12.5px;font-weight:600;color:#0a0a0f;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn.ghost{background:var(--card);border:1px solid var(--border);color:var(--fg);font-weight:500}
+.out{background:#1d1d28;border:1px solid var(--border);border-radius:8px;padding:14px;min-height:40px;font-size:13px;line-height:1.5;color:var(--ac);word-break:break-all;user-select:text;-webkit-user-select:text;font-variant-numeric:tabular-nums}
+.out.mono{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:12px}
+.notes{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start}
+.note.done .txt{color:var(--dim);text-decoration:line-through}
+.note .box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--dim);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#0a0a0f;margin-top:2px}
+.note.done .box{background:var(--ac);border-color:var(--ac)}
+.note .txt{flex:1;font-size:13px;line-height:1.5;word-break:break-word;user-select:text;-webkit-user-select:text}
+.note .del{color:var(--dim);cursor:pointer;font-size:13px;padding:2px 6px;flex-shrink:0}
+.note .del:hover{color:#f87171}
+.fractal canvas{width:100%;background:#000;border-radius:10px;cursor:crosshair}
+.about h2{font-size:18px;font-weight:600;color:var(--ac);margin-bottom:14px}
+.about p{font-size:13px;color:var(--dim2);line-height:1.85;margin-bottom:12px}
+.about .sec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.about .sec .t{font-size:12.5px;font-weight:600;color:var(--fg);margin-bottom:7px}
+.about .sec .v{font-size:12px;color:var(--dim2);line-height:1.75}
+.about .sec .v b{color:var(--ac);font-weight:600}
+.spacer{height:4px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1d1d28;border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--fg);opacity:0;transition:opacity .25s;z-index:80;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+#toast.on{opacity:1}
+#hidden-hint{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--dim);opacity:.32;white-space:nowrap;pointer-events:none}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px}
+::-webkit-scrollbar-track{background:transparent}
+@media(max-width:540px){.grid{grid-template-columns:1fr}.clock .time{font-size:42px}.val.big{font-size:31px}.toolgrid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="l"><div class="logo">M</div><h1>1MB</h1></div>
+  <div class="meta" id="meta"></div>
+</div>
+<div class="tabbar" id="tabbar">
+  <div class="tab on" data-v="dash">仪表盘</div>
+  <div class="tab" data-v="tools">工具箱</div>
+  <div class="tab" data-v="notes">记录</div>
+  <div class="tab" data-v="about">关于</div>
+</div>
+<div id="views">
+  <div class="view on" id="v-dash">
+    <div class="grid">
+      <div class="card clock"><div class="time" id="clock">--:--:--</div><div class="date" id="datestr"></div></div>
+      <div class="card viz"><div class="label">Waveform</div><canvas id="cv"></canvas></div>
+      <div class="card"><div class="label">Entropy</div><div class="val big" id="entropy">—</div><div class="sub">来自本机时序抖动的实时熵值</div></div>
+      <div class="card"><div class="label">Battery</div><div class="val" id="batt">—</div><div class="sub" id="batt-sub"></div></div>
+      <div class="card"><div class="label">Moon</div><div class="val" id="moon">—</div><div class="sub" id="moon-sub"></div></div>
+      <div class="card"><div class="label">Solar</div><div class="val" id="solar">—</div><div class="sub" id="solar-sub"></div></div>
+      <div class="card"><div class="label">Pulse</div><div class="val" id="pulse">—</div><div class="sub">模拟静息心率</div></div>
+      <div class="card"><div class="label">Idle</div><div class="val" id="idle">0s</div><div class="sub">最近一次交互</div></div>
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+  <div class="view" id="v-tools">
+    <input class="search" id="tool-search" placeholder="搜索功能，例如：密码 / 计算 / 颜色 / 秒表">
+    <div class="toolgrid" id="toolgrid"></div>
+  </div>
+  <div class="view" id="v-notes">
+    <div class="card" style="grid-column:1/3">
+      <div class="label">待办与备忘录 / Todo & Notes</div>
+      <div class="row">
+        <input class="inp" id="note-input" placeholder="输入内容，回车添加（保存在本机）">
+        <button class="btn" id="note-add">添加</button>
+      </div>
+      <div class="notes" id="notes"></div>
+    </div>
+  </div>
+  <div class="view about" id="v-about">
+    <h2>1MB</h2>
+    <p>一个故意塞进过多功能的极小程序：所有"全球数据"都由本机算法与设备状态实时推演，因此不需要联网，也不会上传任何内容。</p>
+    <div class="sec"><div class="t">关于数据</div><div class="v">时钟、太阳高度、月相、熵值均由确定性公式计算；电量与陀螺仪来自系统可用 API；待办与备忘录仅保存在本机浏览器。整个过程不产生、不存储、不发送任何个人信息。</div></div>
+    <div class="sec"><div class="t">关于体积</div><div class="v">这是一个单文件 HTML，体积远小于 1MB，双击即可离线运行，无需安装、注册或服务器。</div></div>
+    <div class="sec"><div class="t">关于功能</div><div class="v">内置计算器、单位换算、随机/密码生成、文本处理、编码转换、哈希、颜色、分形、音频、秒表/计时、世界时钟、待办备忘录等离线工具。</div></div>
+  </div>
+</div>
+<div class="modal" id="modal"><div class="panel" id="panel"></div></div>
+<div id="toast"></div>
+<div id="hidden-hint"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const toast=msg=>{const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),1800)};
+const pad=n=>String(n).padStart(2,'0');
+
+/* ── Tabs ── */
+$$('.tab').forEach(t=>t.addEventListener('click',()=>{
+  $$('.tab').forEach(x=>x.classList.remove('on'));
+  $$('.view').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');$('#v-'+t.dataset.v).classList.add('on');window.scrollTo(0,0);
+}));
+
+/* ── Meta ── */
+const meta=$('#meta');
+meta.innerHTML=(Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC')+'<br>'+(navigator.language||'en')+'<br>'+screen.width+'×'+screen.height+' · offline';
+
+/* ── Clock ── */
+const $clock=$('#clock'),$dateD=$('#datestr');
+function tick(){
+  const n=new Date();
+  $clock.textContent=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  const d=['周日','周一','周二','周三','周四','周五','周六'];
+  const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  $dateD.textContent=d[n.getDay()]+' '+mn[n.getMonth()]+' '+n.getDate()+'日 '+n.getFullYear();
+}
+setInterval(tick,1000);tick();
+
+/* ── Waveform ── */
+const cv=$('#cv'),ctx=cv.getContext('2d');let W,WH=200;
+function rsz(){W=cv.width=cv.clientWidth}
+rsz();window.addEventListener('resize',rsz);
+let wd=new Float32Array(240);for(let i=0;i<wd.length;i++)wd[i]=Math.random()*0.4-0.2;
+function drw(t){
+  ctx.clearRect(0,0,W,WH);ctx.beginPath();const st=W/wd.length;
+  for(let i=0;i<wd.length;i++){const x=i*st;const nz=Math.sin(t*.002+i*.3)*.12+Math.sin(t*.005+i*.7)*.08;const y=WH/2+(wd[i]+nz)*WH*.48;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+  ctx.strokeStyle='rgba(110,231,183,0.6)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.lineTo(W,WH);ctx.lineTo(0,WH);ctx.closePath();
+  const g=ctx.createLinearGradient(0,0,0,WH);g.addColorStop(0,'rgba(110,231,183,0.1)');g.addColorStop(1,'rgba(110,231,183,0)');ctx.fillStyle=g;ctx.fill();
+}
+
+/* ── Entropy ── */
+let ep=0;const $ent=$('#entropy');
+function ent(){const a=performance.now()%1*1e9|0,b=Math.random()*1e9|0,c=Date.now()%1e9;ep=(ep^a^b^c)>>>0;$ent.textContent=((ep/4294967295)*100).toFixed(2)+'%'}
+setInterval(ent,200);ent();
+
+/* ── Battery ── */
+const $batt=$('#batt'),$battS=$('#batt-sub');
+if(navigator.getBattery){navigator.getBattery().then(b=>{const l=()=>{const p=Math.round(b.level*100);$batt.textContent=p+'%';$battS.textContent=b.charging?'Charging':'On battery'};l();b.addEventListener('levelchange',l);b.addEventListener('chargingchange',l)})
+}else{$batt.textContent='N/A';$battS.textContent='API unavailable'}
+
+/* ── Moon ── */
+const $moon=$('#moon'),$moonS=$('#moon-sub');
+function moon(){const syn=29.53058867*86400000,k=new Date(2000,0,6,18,14,0).getTime(),ph=((Date.now()-k)%syn)/syn;
+  const names=['新月','娥眉月','上弦月','盈凸月','满月','亏凸月','下弦月','残月'],em=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+  const ix=Math.round(ph*8)%8;$moon.textContent=em[ix];$moonS.textContent=names[ix]+' · '+(ph*100).toFixed(1)+'%'}
+moon();setInterval(moon,60000);
+
+/* ── Solar ── */
+const $sol=$('#solar'),$solS=$('#solar-sub');
+function solar(){const n=new Date(),d=Math.floor((n-new Date(n.getFullYear(),0,0))/86400000),h=n.getHours()+n.getMinutes()/60;
+  const dec=23.44*Math.sin((284+d)/365*2*Math.PI),ha=(h-12)*15,lat=30,alt=Math.asin(Math.sin(dec*Math.PI/180)*Math.sin(lat*Math.PI/180)+Math.cos(dec*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.cos(ha*Math.PI/180))*180/Math.PI;
+  $sol.textContent=alt.toFixed(1)+'°';$solS.textContent=alt>0?'Above horizon':'Below horizon'}
+solar();setInterval(solar,30000);
+
+/* ── Pulse ── */
+const $pulse=$('#pulse');
+setInterval(()=>{$pulse.textContent=(68+Math.round(Math.sin(Date.now()*.0001)*4))+' bpm'},1000);
+
+/* ── Idle ── */
+const $idle=$('#idle');let last=Date.now();
+['mousemove','mousedown','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>last=Date.now(),{passive:true}));
+setInterval(()=>{const s=Math.floor((Date.now()-last)/1000);$idle.textContent=s<60?s+'s':s<3600?Math.floor(s/60)+'m '+(s%60)+'s':Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m'},1000);
+
+/* ── Status chips ── */
+const $st=$('#status');
+[['#6ee7b7','Offline-ready'],['#818cf8','Zero data'],['#f9a8d4','< 1MB'],['#fbbf24','No ads'],['#38bdf8','No tracking'],['#a78bfa','No accounts'],['#f87171','No subscriptions'],['#34d399','No cloud']].forEach(c=>{const e=el('div','chip');e.innerHTML='<span class="dot" style="background:'+c[0]+'"></span>'+c[1];$st.appendChild(e)});
+
+/* ── Animation loop ── */
+function loop(t){for(let i=0;i<wd.length-1;i++)wd[i]=wd[i+1];wd[wd.length-1]=(Math.random()-.5)*.5+Math.sin(t*.003)*.2;drw(t);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+if(window.DeviceOrientationEvent)window.addEventListener('deviceorientation',e=>{const g=Math.round(e.gamma||0),b=Math.round(e.beta||0);if(g||b)$('#hidden-hint').textContent='Tilt: '+g+'° / '+b+'°'});
+
+/* ══════ TOOLS ══════ */
+const $tg=$('#toolgrid');
+function calcEval(s){
+  s=s.replace(/[×x]/gi,'*').replace(/÷/g,'/').replace(/\s+/g,'');
+  if(!/^[\d+\-*/().^%]+$/.test(s))throw new Error('非法表达式');
+  const T=[],toks=s.match(/\d+\.?\d*|[+\-*/^%()]/g)||[];let cur='';const pushN=()=>{if(cur!==''){T.push({t:'n',v:parseFloat(cur)});cur=''}};
+  for(const k of toks){if(/[\d.]/.test(k))cur+=k;else{pushN();T.push({t:k==='^'?'pow':k,v:k})}}pushN();
+  const out=[],ops=[];const prec={'+':1,'-':1,'*':2,'/':2,'%':2,'pow':3,'u-':4};
+  for(const tk of T){if(tk.t==='n')out.push(tk);
+    else if(tk.t==='(')ops.push(tk);
+    else if(tk.t===')'){while(ops.length&&ops[ops.length-1].t!=='(')out.push(ops.pop());ops.pop()}
+    else{const p=prec[tk.t];while(ops.length&&prec[ops[ops.length-1].t]>=p)out.push(ops.pop());ops.push(tk)}}
+  while(ops.length)out.push(ops.pop());
+  const st=[];for(const tk of out){if(tk.t==='n')st.push(tk.v);else{const b=st.pop(),a=st.pop();
+    if(tk.t==='+')st.push(a+b);else if(tk.t==='-')st.push(a-b);else if(tk.t==='*')st.push(a*b);else if(tk.t==='/')st.push(a/b);else if(tk.t==='%')st.push(a%b);else if(tk.t==='pow')st.push(Math.pow(a,b))}}
+  if(st.length!==1)throw new Error('表达式错误');return st[0];
+}
+
+function openModal(title,desc,body){
+  const p=$('#panel');p.innerHTML='<h3>'+title+'</h3><div class="pdesc">'+desc+'</div>'+body+'<div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn ghost" id="mclose">关闭</button></div>';
+  $('#mclose').addEventListener('click',closeModal);$('#modal').classList.add('on');
+}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').classList.contains('on'))closeModal()});
+window.__openModal=openModal;window.__closeModal=closeModal;
+
+const tools=[
+  {ic:'🧮',nm:'计算器',ds:'四则、幂、括号、取模',body(){openModal('计算器','支持 + - * / ^ ( ) %，实时计算',
+    '<div class="row"><input class="inp" id="cexpr" placeholder="例如 (3+4)*5/2^2" value="(3+4)*5/2^2"></div><div class="out" id="cres"></div>')}},
+  {ic:'📏',nm:'单位换算',ds:'长度/质量/温度/容量',body(){openModal('单位换算','在类别下选择单位并输入数值',
+    '<div class="row"><label>类别</label><select class="inp" id="ucat"><option value="len">长度</option><option value="mass">质量</option><option value="temp">温度</option><option value="vol">容量</option><option value="data">数据</option></select></div>'+
+    '<div class="row"><input class="inp" id="uval" type="number" value="1" placeholder="数值"></div>'+
+    '<div class="row"><select class="inp" id="ufrom"></select></div><div class="row"><div class="out" id="ures"></div></div>')}},
+  {ic:'🔢',nm:'随机数',ds:'整数/浮点/区间随机',body(){openModal('随机数','基于本机熵源生成',
+    '<div class="row"><label>最小值</label><input class="inp" id="randmin" type="number" value="1"></div>'+
+    '<div class="row"><label>最大值</label><input class="inp" id="randmax" type="number" value="100"></div>'+
+    '<div class="row"><label>个数</label><input class="inp" id="randn" type="number" value="5"></div>'+
+    '<button class="btn" id="randgo">生成</button><div class="out mono" id="randout"></div>')}},
+  {ic:'🔐',nm:'密码生成',ds:'强随机密码+强度',body(){openModal('密码生成','可调长度与字符集',
+    '<div class="row"><label>长度</label><input class="inp" id="pwlen" type="number" value="16" min="6" max="64"></div>'+
+    '<div class="row"><input class="inp" id="pwout" readonly></div><div class="row"><button class="btn" id="pwgo">生成</button><button class="btn ghost" id="pwc">复制</button></div>')}},
+  {ic:'📊',nm:'文本统计',ds:'字数/字符/行/段落',body(){openModal('文本统计','输入文本实时统计',
+    '<textarea class="inp" id="tcin" rows="6" placeholder="粘贴或输入文本" style="width:100%;resize:vertical"></textarea><div class="out mono" id="tcout"></div>')}},
+  {ic:'🔤',nm:'Base64',ds:'编码/解码',body(){openModal('Base64','UTF-8 安全的 Base64 转换',
+    '<div class="row"><select class="inp" id="b64mode"><option value="enc">编码</option><option value="dec">解码</option></select></div>'+
+    '<textarea class="inp" id="b64in" rows="4" placeholder="输入内容" style="width:100%;resize:vertical"></textarea>'+
+    '<button class="btn" id="b64go">转换</button><div class="out mono" id="b64out"></div>')}},
+  {ic:'🌐',nm:'URL 编解码',ds:'encode/decode',body(){openModal('URL 编解码','百分号编码与解码',
+    '<div class="row"><select class="inp" id="urlmode"><option value="enc">编码</option><option value="dec">解码</option></select></div>'+
+    '<input class="inp" id="urlin" placeholder="输入内容"><button class="btn" id="urlgo">转换</button><div class="out mono" id="urlout"></div>')}},
+  {ic:'🧬',nm:'哈希',ds:'SHA-256 / SHA-1',body(){openModal('哈希','使用 WebCrypto 离线计算',
+    '<select class="inp" id="hashalg" style="width:100%"><option value="SHA-256">SHA-256</option><option value="SHA-1">SHA-1</option><option value="SHA-384">SHA-384</option><option value="SHA-512">SHA-512</option></select>'+
+    '<textarea class="inp" id="hashin" rows="4" placeholder="输入内容" style="width:100%;margin-top:10px;resize:vertical"></textarea>'+'<button class="btn" id="hashgo">计算</button><div class="out mono" id="hashout"></div>')}},
+  {ic:'🎨',nm:'颜色转换',ds:'hex / rgb / hsl',body(){openModal('颜色转换','输入 hex 或 rgb，查看转换与预览',
+    '<input class="inp" id="colin" placeholder="#6ee7b7 或 rgb(110,231,183)" value="#6ee7b7"><button class="btn" id="colgo">转换</button>'+
+    '<div style="width:100%;height:56px;border-radius:8px;margin:10px 0" id="colprev"></div><div class="out mono" id="colout"></div>')}},
+  {ic:'🧩',nm:'分形',ds:'Mandelbrot 缩放',body(){openModal('Mandelbrot','点击画布缩放，双击重置',
+    '<canvas id="frac" width="520" height="340" style="width:100%"></canvas><div class="out mono" id="fracinfo" style="margin-top:10px"></div>')}},
+  {ic:'🔊',nm:'音调器',ds:'WebAudio 振荡器',body(){openModal('音调器','生成可控频率的持续音',
+    '<div class="row"><label>频率</label><input class="inp" id="tonefreq" type="range" min="60" max="2000" value="440"><span id="toneval" style="min-width:60px">440 Hz</span></div>'+
+    '<div class="row"><label>波形</label><select class="inp" id="tonewave"><option value="sine">正弦</option><option value="square">方波</option><option value="sawtooth">锯齿</option><option value="triangle">三角</option></select></div>'+
+    '<button class="btn" id="tonego">播放/停止</button>')}},
+  {ic:'⏱️',nm:'秒表',ds:'精确计时',body(){openModal('秒表','开始/暂停/重置',
+    '<div class="out" id="stsec" style="text-align:center;font-size:34px;font-weight:200">00:00.00</div>'+
+    '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn" id="stgo">开始</button><button class="btn ghost" id="streset">重置</button></div>')}},
+  {ic:'⏳',nm:'倒计时',ds:'分钟级定时',body(){openModal('倒计时','设定分钟数开始',
+    '<div class="row"><label>分钟</label><input class="inp" id="ctmin" type="number" value="5" min="0"></div>'+
+    '<button class="btn" id="ctgo">开始</button><div class="out" id="ctout" style="text-align:center;font-size:30px;margin-top:14px"></div>')}},
+  {ic:'🌍',nm:'世界时钟',ds:'多时区时间',body(){openModal('世界时钟','本地实时计算多个城市时间',
+    '<div class="out mono" id="wc" style="line-height:1.9"></div>')}},
+  {ic:'📅',nm:'日期计算',ds:'差值/工作日',body(){openModal('日期计算','计算两日期相差天数',
+    '<div class="row"><label>开始</label><input class="inp" id="da" type="date"></div><div class="row"><label>结束</label><input class="inp" id="db" type="date"></div><button class="btn" id="dgo">计算</button><div class="out mono" id="dout"></div>')}},
+  {ic:'🔢',nm:'进制转换',ds:'dec/hex/bin',body(){openModal('进制转换','十、十六、二进制互转',
+    '<input class="inp" id="basein" placeholder="十进制数值" value="255"><button class="btn" id="basego">转换</button><div class="out mono" id="baseout"></div>')}},
+  {ic:'📝',nm:'待办/备忘',ds:'本地持久记录',body(){openModal('待办/备忘','在"记录"页管理，数据仅存本机', '') ;document.querySelector('.tab[data-v="notes"]').click()}},
+];
+
+function renderTools(filter){
+  $tg.innerHTML='';
+  tools.filter(t=>t.nm.toLowerCase().includes(filter)).forEach(t=>{
+    const e=el('button','tool');e.innerHTML='<div class="icon">'+t.ic+'</div><div class="name">'+t.nm+'</div><div class="desc">'+t.ds+'</div>';
+    e.addEventListener('click',()=>t.body());$tg.appendChild(e);
+  });
+  if(!$tg.children.length)$tg.innerHTML='<div style="color:var(--dim);font-size:12px;padding:20px">没有匹配的功能</div>';
+}
+renderTools('');
+$('#tool-search').addEventListener('input',e=>renderTools(e.target.value.trim().toLowerCase()));
+
+/* ── Tool interactions (single delegated click handler) ── */
+document.addEventListener('click',e=>{
+  const id=e.target.id;
+  if(id==='randgo'){const lo=+$('#randmin').value,hi=+$('#randmax').value,n=+$('#randn').value||1;let a=[];for(let i=0;i<Math.min(n,200);i++)a.push(Math.floor(Math.random()*(hi-lo+1))+lo);$('#randout').textContent=a.join(', ')}
+  if(id==='pwgo'){const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%^&*',len=Math.min(Math.max(+$('#pwlen').value||16,6),64);let r='';for(let i=0;i<len;i++)r+=chars[Math.floor(Math.random()*chars.length)];$('#pwout').value=r;toast('已生成')}
+  if(id==='pwc'){if(navigator.clipboard)navigator.clipboard.writeText($('#pwout').value);toast('已复制')}
+  if(id==='b64go'){const m=$('#b64mode').value,v=$('#b64in').value;try{$('#b64out').textContent=m==='enc'?btoa(unescape(encodeURIComponent(v))):decodeURIComponent(escape(atob(v.trim())))}catch(_){$('#b64out').textContent='无效输入'}}
+  if(id==='urlgo'){const m=$('#urlmode').value,v=$('#urlin').value;try{$('#urlout').textContent=m==='enc'?encodeURIComponent(v):decodeURIComponent(v)}catch(_){$('#urlout').textContent='无效输入'}}
+  if(id==='hashgo'){const v=$('#hashin').value;crypto.subtle.digest($('#hashalg').value,new TextEncoder().encode(v)).then(b=>{$('#hashout').textContent=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}).catch(()=>toast('计算失败'))}
+  if(id==='colgo'){const v=$('#colin').value.trim();let r,g,b;if(v.startsWith('#')){r=parseInt(v.slice(1,3),16);g=parseInt(v.slice(3,5),16);b=parseInt(v.slice(5,7),16)}else{const m=v.match(/rgb\((\d+),?\s*(\d+),?\s*(\d+)\)/);if(!m){$('#colout').textContent='无效颜色';return}r=+m[1];g=+m[2];b=+m[3]}
+    const max=Math.max(r,g,b)/255,min=Math.min(r,g,b)/255,l=(max+min)/2;let h=0,s=0;if(max!==min){const d=max-min;s=l>.5?d/(2-max-min):d/(max+min);const rr=(max-r/255)/d,gg=(max-g/255)/d,bb=(max-b/255)/d;h=r/255===max?bb-gg:g/255===max?2+rr-bb:4+gg-rr;h=(h*60+360)%360}
+    $('#colprev').style.background='rgb('+r+','+g+','+b+')';$('#colout').textContent='RGB: '+r+','+g+','+b+'\nHSL: '+Math.round(h)+'° '+Math.round(s*100)+'% '+Math.round(l*100)+'%\nHEX: #'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('')}
+  if(id==='dgo'){const a=new Date($('#da').value),b=new Date($('#db').value);if(isNaN(a)||isNaN(b)){$('#dout').textContent='请选择两个日期';return}const d=Math.round((b-a)/86400000);$('#dout').textContent='相差 '+Math.abs(d)+' 天'+(d<0?'（较早）':'')}
+  if(id==='basego'){const v=parseInt($('#basein').value);if(isNaN(v)){$('#baseout').textContent='无效';return}$('#baseout').textContent='DEC: '+v+'\nHEX: 0x'+v.toString(16).toUpperCase()+'\nBIN: '+v.toString(2)}
+});
+
+/* Calculator (live input) */
+document.addEventListener('input',e=>{if(e.target.id==='cexpr'){try{$('#cres').textContent=calcEval(e.target.value)}catch(_){$('#cres').textContent='等待有效输入'}}});
+/* Unit conversion (live, driven by input) */
+document.addEventListener('input',e=>{if(e.target.id==='uval'||e.target.id==='ufrom'||e.target.id==='ucat')unitCalc()});
+function unitCalc(){
+  const cat=($('#ucat')||{}).value;if(!cat)return;
+  const uvalEl=$('#uval'),fromSel2=$('#ufrom');
+  if(!uvalEl||!fromSel2){return}
+  const units={len:{m:1,km:1000,cm:0.01,mm:0.001,inch:0.0254,ft:0.3048},mass:{kg:1,g:0.001,mg:0.000001,lb:0.4536,oz:0.02835},vol:{l:1,ml:0.001,gal:3.78541,cup:0.24},data:{b:1,kb:1024,mb:1048576,gb:1073741824}}[cat];
+  let names,fromSel=fromSel2;
+  const v=parseFloat(uvalEl.value)||0;
+  if(cat!=='temp'){
+    names=Object.keys(units);
+    if(!fromSel.dataset.ready||fromSel.dataset.cat!==cat){fromSel.innerHTML=names.map(n=>'<option>'+n+'</option>').join('');fromSel.dataset.ready=1;fromSel.dataset.cat=cat}
+    if(!fromSel.value)fromSel.value=names[0];
+    const f=fromSel.value;
+    $('#ures').textContent=names.map(n=>n+': '+(v*units[f]/units[n]).toFixed(4)).join('  ·  ');
+  }else{
+    names=['c','f','k'];
+    if(!fromSel.dataset.ready||fromSel.dataset.cat!=='temp'){fromSel.innerHTML=names.map(n=>'<option>'+n+'</option>').join('');fromSel.dataset.ready=1;fromSel.dataset.cat='temp'}
+    if(!fromSel.value)fromSel.value=names[0];
+    const f=fromSel.value;let c=v;if(f==='f')c=(v-32)*5/9;else if(f==='k')c=v-273.15;
+    $('#ures').textContent=names.map(n=>{const val=n==='f'?c*9/5+32:n==='k'?c+273.15:c;return n+': '+val.toFixed(2)}).join('  ·  ');
+  }
+}
+try{$('#cres')&&($('#cres').textContent=calcEval('(3+4)*5/2^2'))}catch(_){}
+
+/* Stopwatch */
+function initStopwatch(){const out=$('#stsec');out.textContent='00:00.00';let t=0,running=false,iv;
+  const fmt=x=>{const m=Math.floor(x/60),s=x%60;return pad(m)+':'+s.toFixed(2).padStart(5,'0')};
+  $('#stgo').addEventListener('click',()=>{running=!running;$('#stgo').textContent=running?'暂停':'继续';if(running)iv=setInterval(()=>{t+=0.01;out.textContent=fmt(t)},10);else clearInterval(iv)});
+  $('#streset').addEventListener('click',()=>{t=0;out.textContent='00:00.00';running=false;clearInterval(iv);$('#stgo').textContent='开始'});
+}
+
+/* Countdown */
+function initCountdown(){const out=$('#ctout');let iv;clearInterval(iv);out.textContent='--:--';
+  $('#ctgo').addEventListener('click',()=>{const m=+$('#ctmin').value;if(!m)return toast('请输入分钟');const total=m*60;let t=total;out.textContent=pad(Math.floor(t/60))+':'+pad(t%60);clearInterval(iv);iv=setInterval(()=>{t--;out.textContent=pad(Math.floor(t/60))+':'+pad(t%60);if(t<=0){clearInterval(iv);out.textContent='完成';toast('倒计时结束')}},1000)});
+}
+
+/* World clock */
+function initWorld(){const out=$('#wc');if(!out.dataset.on){out.dataset.on=1;
+  const cities=[['London','Europe/London'],['New York','America/New_York'],['Tokyo','Asia/Tokyo'],['Shanghai','Asia/Shanghai'],['Los Angeles','America/Los_Angeles'],['Sydney','Australia/Sydney']];
+  const draw=()=>{out.textContent=cities.map(c=>c[0]+'  '+new Date().toLocaleTimeString('en-GB',{timeZone:c[1],hour12:false})).join('\n')};
+  draw();setInterval(draw,1000);
+}}
+
+/* Fractal */
+function initFractal(){const c=$('#frac');if(!c)return;const x=c.getContext('2d');const W1=c.width,H1=c.height;
+  let x0=-2.5,y0=-1.25,sc=3.0/W1;
+  function draw(){const im=x.createImageData(W1,H1),d=im.data;for(let py=0;py<H1;py++){for(let px=0;px<W1;px++){let zx=0,zy=0,cx=x0+px*sc,cy=y0+py*sc,i=0;while(i<100&&zx*zx+zy*zy<4){const tx=zx*zx-zy*zy+cx;zy=2*zx*zy+cy;zx=tx;i++}const off=(py*W1+px)*4;if(i===100){d[off]=10;d[off+1]=20;d[off+2]=30}else{const v=Math.sqrt(i/100);d[off]=Math.round(110*v+60);d[off+1]=Math.round(231*v);d[off+2]=Math.round(183*v)}d[off+3]=255}}x.putImageData(im,0,0);$('#fracinfo').textContent='迭代 100 · 缩放 '+sc.toExponential(2)}
+  draw();
+  c.addEventListener('click',e=>{const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W1,py=(e.clientY-r.top)/r.height*H1;x0+=(px-W1/2)*sc;y0+=(py-H1/2)*sc;sc*=0.7;draw()});
+  c.addEventListener('dblclick',()=>{x0=-2.5;y0=-1.25;sc=3.0/W1;draw()});
+}
+
+/* Tone */
+function initTone(){let ac=null,osc,g,playing=false;const f=$('#tonefreq'),v=$('#toneval');f.addEventListener('input',()=>{v.textContent=f.value+' Hz';if(osc)osc.frequency.value=f.value});
+  $('#tonego').addEventListener('click',()=>{if(!playing){ac=ac||new (window.AudioContext||window.webkitAudioContext)();g=ac.createGain();g.gain.value=0.08;osc=ac.createOscillator();osc.type=$('#tonewave').value;osc.frequency.value=f.value;osc.connect(g).connect(ac.destination);osc.start();$('#tonego').textContent='停止';playing=true}else{osc.stop();osc=null;playing=false;$('#tonego').textContent='播放/停止'}});
+}
+
+/* Hook tool-specific init when modal content changes */
+const panelObs=new MutationObserver(()=>{
+  const once=elm=>elm&&!elm.dataset.init?(elm.dataset.init=1,true):false;
+  if(once($('#stsec')))initStopwatch();
+  if(once($('#ctout')))initCountdown();
+  if(once($('#wc')))initWorld();
+  if(once($('#frac')))initFractal();
+  if(once($('#tonefreq')))initTone();
+  if(once($('#tcin'))){const calc=()=>{const v=$('#tcin').value,chars=[...v],cn=chars.filter(c=>/[\u4e00-\u9fa5]/.test(c)).length,en=chars.filter(c=>/[a-zA-Z0-9]/.test(c)).length,words=(v.match(/[a-zA-Z0-9]+/g)||[]).length,lines=v?v.split('\n').length:0,s=(v.match(/[。！？!?]/g)||[]).length;$('#tcout').textContent='字符 '+chars.length+'\n中文字符 '+cn+'\n英文/数字 '+en+'\n单词 '+words+'\n行 '+lines+'\n句子 '+s};$('#tcin').addEventListener('input',calc);calc()}
+  if($('#ucat')&&!$('#ucat').dataset.init){$('#ucat').dataset.init=1;unitCalc()}
+  if(once($('#uval')))unitCalc();
+  if($('#cres')&&!$('#cres').dataset.init){$('#cres').dataset.init=1;try{$('#cres').textContent=calcEval($('#cexpr').value)}catch(_){$('#cres').textContent='等待有效输入'}}
+});
+panelObs.observe($('#panel'),{childList:true,subtree:true});
+
+/* Notes (localStorage) */
+const $ni=$('#note-input'),$notes=$('#notes');
+let notes=[];try{notes=JSON.parse(localStorage.getItem('m_notes')||'[]')}catch(_){notes=[]}
+function saveNotes(){localStorage.setItem('m_notes',JSON.stringify(notes))}
+function renderNotes(){$notes.innerHTML='';if(!notes.length){$notes.innerHTML='<div style="color:var(--dim);font-size:12px;padding:8px">暂无记录，添加一条开始吧</div>';return}
+  notes.forEach((n,i)=>{const e=el('div','note'+(n.done?' done':''));e.innerHTML='<div class="box">'+(n.done?'✓':'')+'</div><div class="txt">'+n.text.replace(/</g,'&lt;')+'</div><div class="del">删除</div>';
+    e.querySelector('.box').addEventListener('click',()=>{notes[i].done=!notes[i].done;saveNotes();renderNotes()});
+    e.querySelector('.del').addEventListener('click',()=>{notes.splice(i,1);saveNotes();renderNotes()});
+    $notes.appendChild(e)})}
+function addNote(){const v=$ni.value.trim();if(!v)return;notes.unshift({text:v,done:false});saveNotes();renderNotes();$ni.value=''}
+$('#note-add').addEventListener('click',addNote);$ni.addEventListener('keydown',e=>{if(e.key==='Enter')addNote()});
+renderNotes();
+</script>
+</body>
+</html>

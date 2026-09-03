@@ -1,0 +1,24 @@
+# Temporary / generated local artifacts
+node_modules/
+*.log
+*.tmp
+.DS_Store
+
+# Local editor configs
+.vscode/
+.idea/
+
+# Playwright caches and browser downloads (never commit)
+playwright-report/
+test-results/
+**/node_modules/
+
+# Keep screenshots only where README references them; ignore stray drafts
+screenshot_*.png
+v1_*.png
+v2_*.png
+
+# The deliverable folder should contain only the app; drafts live outside git
+outputs/*.png
+outputs/*.jpg
+outputs/*.jpeg
