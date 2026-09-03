@@ -12,6 +12,8 @@
 
 ---
 
+> 🌐 **Live Demo:** [https://lucas-qh-lai.github.io/1mb/](https://lucas-qh-lai.github.io/1mb/)
+
 **A deliberately tiny offline utility that packs far more than 1MB of functionality into a single file.**
 
 You haven't even opened it yet, and it is already "in use"—because its "global data" is derived live from local algorithms and your device state, not from some distant server. It needs no network, collects no private data, and yet reflects the context of your current moment more closely than any single app: the current time, entropy, moon phase, solar altitude, battery level, device orientation, and the notes and todos you keep locally.
@@ -182,6 +184,8 @@ python3 -m http.server 8080
 - Inputs usually update **live**; some tools also offer "Generate/Calculate" buttons.
 - Press `Esc` or click the backdrop to close the current tool.
 - In the **Notes** view, type and press Enter or click "Add" to save locally.
+
+> You can also try it directly on GitHub Pages: [https://lucas-qh-lai.github.io/1mb/](https://lucas-qh-lai.github.io/1mb/)
 
 ## 📁 Directory Structure
 
