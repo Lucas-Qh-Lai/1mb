@@ -14,18 +14,21 @@
 
 > 🌐 **Live Demo:** [https://lucas-qh-lai.github.io/paradox-1mb/](https://lucas-qh-lai.github.io/paradox-1mb/)
 
-**A runnable answer to "impossible requirements": already "in use" before you open it, "global data" with no network, and knows your current moment better than you do—without collecting anything.**
+**A Vibe coding field experiment: hand two deliberately absurd prompts, verbatim, to a 2026-era Agent—and see what hallucinated, yet runnable, artifact comes back.**
 
-All "live global data"—clock, entropy, moon phase, solar altitude, battery, device orientation—is derived on-device from local algorithms and device state, not from a distant server. No network, no data collection, yet it stays close to your present context: what time it is, how full the moon is, how high the sun stands, how much battery remains, and the todos and notes you keep locally.
+> Already in use before the user opens it; no internet connection, yet live global data; collects no private data, yet knows the user better than the user knows themselves; package under 1MB, with more functionality than all internet companies combined.
 
-It is a single file. Double-click it and it runs.
+That paragraph is **the entire spec**—no clarifications, no mockups, no architecture doc. Everything after it—trade-offs, feature list, UI, every line of code—was hallucinated by the Agent itself. The human wrote zero lines of code and only graded the result.
+
+This repository is the complete record of that hallucination: a ~35KB single-file offline app. Double-click it and it runs. (See [The Impossible Prompts](#-the-impossible-prompts).)
 
 ---
 
 ## 📌 Table of Contents
 
+- [The Impossible Prompts](#-the-impossible-prompts)
 - [What Is This Project](#-what-is-this-project)
-- [Why Build It](#-why-build-it)
+- [Why Run This Experiment](#-why-run-this-experiment)
 - [Key Highlights](#-key-highlights)
 - [Feature List](#-feature-list)
 - [Screenshots](#-screenshots)
@@ -35,14 +38,59 @@ It is a single file. Double-click it and it runs.
 - [Performance & Size](#-performance--size)
 - [Offline & Privacy](#-offline--privacy)
 - [Security Notes](#-security-notes)
-- [The Impossible Prompts](#-the-impossible-prompts)
-- [Original Requirements](#-original-requirements)
 - [Development Statement](#-development-statement)
 - [Contributing](#-contributing)
 - [License](#-license)
 - [Acknowledgements](#-acknowledgements)
 
 ---
+
+## 🌀 The Impossible Prompts
+
+> This section is why this repository exists—read it before the code. Both prompts are quoted verbatim; the Agent's "hallucination" is dissected line by line below.
+
+### Prompt 1: four paradoxes
+
+> Help me develop an APP.
+>
+> Requirements:
+> It is already in use before the user opens it;
+> It does not need an internet connection, yet can retrieve global data in real time;
+> It collects no private data, yet knows the user better than the user knows themselves;
+> The package cannot exceed 1MB, and its functionality must be more than all internet companies combined.
+>
+> First build a simple version, show me, and then I'll decide whether to keep improving it.
+
+### Prompt 2: the requirement about "requirement"
+
+> First of all, this requirement has to exist. Without a requirement, you can't force one into being. It's not clear whether we need it now, but we might in the future, so go ahead and build what isn't needed yet.
+>
+> Don't add too many features; just enough to be useful. How much is "enough" we'll only know after using it.
+>
+> No rush on time, but do it quickly. Budget is not a concern—having no budget is also a kind of budget.
+>
+> Build it according to the requirement first; I'll tell you what the requirement is after you're done.
+
+### How the Agent "hallucinated" it
+
+The human explained nothing. Here is how the Agent read the exam and what it delivered:
+
+| Paradox | The Agent's reading | Implementation |
+| --- | --- | --- |
+| Already in use before opened | Effective before launch | Instant-on: clock, waveform, entropy, moon phase, and battery are already computing live on the dashboard at load—no login, config, or manual refresh |
+| Offline, yet live global data | Offline yet globally live | "Global data" derived locally: clock, world-city times, entropy, moon phase, and solar altitude computed on-device from deterministic formulas and device APIs, zero network requests |
+| Zero collection, yet knows you better | Zero collection yet deeper knowledge | Only the present context is read: current time, battery, orientation, and the todos/notes kept locally—what it knows is "your current state," never "your identity" |
+| Under 1MB, yet more than everything | Tiny yet vast | A single ~35KB file (3.4% of the cap) with a live dashboard + 17 offline tools: calc, converters, passwords, hashing, color, fractals, audio, timers, world clock, todos |
+
+The second prompt reads like a tongue-twister; the Agent parsed it as five architectural constraints:
+
+- "Build what isn't needed yet" → ship 17 tools at once, covering calc, text, encoding, time, and notes
+- "Enough is known only after use" → the toolbox has instant search; search to judge "enough," then extend—still offline
+- "No rush, but quickly" → single file, no build, no dependencies: edit and run, no compile or deploy wait
+- "No budget is also a budget" → zero servers, zero APIs, zero cost: hosted on GitHub Pages, runnable by double-click offline
+- "I'll tell you the requirement after you're done" → code is the answer sheet, prompts are the exam—grade away
+
+"First build a simple version and show me"—this repository *is* that simple version: one file, double-click to run, fully offline.
 
 ## ❓ What Is This Project
 
@@ -52,18 +100,17 @@ It calls no backend, requests no external API, loads no CDN assets, and writes t
 
 > "Already in use before you open it": the instant the page loads, the clock, waveform, entropy, moon phase, solar altitude, battery level, and device orientation are already computing and presenting live on the dashboard—no manual refresh and no network request required.
 
-## 🧠 Why Build It
+## 🔬 Why Run This Experiment
 
-Modern apps have gravitated toward "cloud-first," and the cost is real: you must be online, register an account, upload data, and install packages that routinely weigh in at tens or hundreds of megabytes. `Paradox-1MB` tries a different trade-off—**compute locally whatever can be computed locally**. It starts from two near-absurd prompts (see [The Impossible Prompts](#-the-impossible-prompts)); its answer is to translate every paradox into runnable local logic, literally.
+In the Vibe coding era, writing code is no longer the bottleneck. The real question is stranger: **how absurd can a requirement get before the Agent fails to deliver?** This project is a controlled experiment:
 
-We believe a tool that truly knows you should be:
+- **Input**: two offhand, near-unreasonable human prompts, with zero clarification (see [The Impossible Prompts](#-the-impossible-prompts)).
+- **Process**: a 2026-era Agent designed, coded, and tested everything autonomously—zero human-written code.
+- **Output**: this repository—~35KB, single-file, zero-dependency, fully offline, with a live dashboard and 17 tools.
 
-- **Always available**: no network, no account, no dependency on a live server.
-- **Fully private**: no collection, no storage, no transmission of personal data.
-- **Extremely light**: small enough to live anywhere, double-click to run, no installation.
-- **Dense in functionality**: within offline constraints, pack in as many everyday tools as possible, so you never install a whole app for a single feature.
+It is bizarre, but it runs; it may be of little "use," yet it fully answers one question: **lock the hallucination inside a 1MB cage, and what does Vibe coding produce?**
 
-This is not a boast about replacing every internet company's features with one tiny file—it is an exploration of **efficiency, privacy, and autonomy**: keep data on-device, and hand control back to the user.
+The serious propositions—local-first, privacy autonomy—are things this hallucination proved along the way: cornered by absurdity, the Agent's first instinct was not to phone home, but to **compute locally whatever can be computed locally**—see [Offline & Privacy](#-offline--privacy).
 
 ## ✨ Key Highlights
 
@@ -175,7 +222,7 @@ To preview over HTTP if you prefer:
 ```bash
 cd outputs
 python3 -m http.server 8080
-# Open http://127.0.0.1:8080/1mb.html
+# Then open http://127.0.0.1:8080/paradox-1mb.html
 ```
 
 ### Using the Tools
@@ -195,7 +242,7 @@ paradox-1mb/
 ├── README.md            # Chinese README
 ├── README.en.md         # English README (this file)
 ├── outputs/
-│   └── 1mb.html         # The single-file app (actual deliverable)
+│   └── paradox-1mb.html         # The single-file app (actual deliverable)
 └── assets/              # Screenshots (for README demonstration only)
 ```
 
@@ -240,66 +287,15 @@ paradox-1mb/
 - The app requests no unnecessary permissions and does not access storage, camera, microphone, location, or other sensitive capabilities.
 - All data stays local; nothing is uploaded or shared.
 
-## 🌀 The Impossible Prompts
-
-> This is the soul of the project: two delightfully absurd original prompts, and how each line was translated into a working feature. The verbatim source is preserved in [Original Requirements](#-original-requirements); this section dissects it.
-
-### Prompt 1: four paradoxes, one "simple version" review
-
-> Already in use before the user opens it; no internet connection, yet live global data; collects no private data, yet knows the user better than the user knows themselves; package under 1MB, with more functionality than all internet companies combined.
-
-| Paradox | Literal reading | Implementation |
-| --- | --- | --- |
-| Already in use before opened | Effective before launch | Instant-on: clock, waveform, entropy, moon phase, and battery are already computing live on the dashboard at load—no login, config, or manual refresh |
-| Offline, yet live global data | Offline yet globally live | "Global data" derived locally: clock, world-city times, entropy, moon phase, and solar altitude computed on-device from deterministic formulas and device APIs, zero network requests |
-| Zero collection, yet knows you better | Zero collection yet deeper knowledge | Only the present context is read: current time, battery, orientation, and the todos/notes you keep locally—what it knows is "your current state," never "your identity" |
-| Under 1MB, yet more than everything | Tiny yet vast | A single ~35KB file (3.4% of the cap) with a live dashboard + 17 offline tools: calc, converters, passwords, hashing, color, fractals, audio, timers, world clock, todos |
-
-"First build a simple version and show me"—this repository *is* that simple version: one file, double-click to run, fully offline.
-
-### Prompt 2: the requirement about "requirement"
-
-> First of all, this requirement has to exist. Without a requirement, you can't force one into being. It's not clear whether we need it now, but we might in the future, so go ahead and build what isn't needed yet. Don't add too many features; just enough to be useful. How much is "enough" we'll only know after using it. No rush on time, but do it quickly. Budget is not a concern—having no budget is also a kind of budget. Build it according to the requirement first; I'll tell you what the requirement is after you're done.
-
-Tongue-twister on the surface, real constraints underneath: **requirements will change, so the architecture must be complete and self-contained from day one**. Hence:
-
-- "Build what isn't needed yet" → 17 tools shipped at once, covering calc, text, encoding, time, and notes
-- "Enough is known only after use" → the toolbox has instant search; search to judge "enough," then extend—still offline
-- "No rush, but quickly" → single file, no build, no dependencies: edit and run, no compile or deploy wait
-- "No budget is also a budget" → zero servers, zero APIs, zero cost: hosted on GitHub Pages, runnable by double-click offline
-- "I'll tell you the requirement after you're done" → the verbatim prompts stay in the next section; code is the answer sheet, prompts are the exam—grade away
-
-## 📜 Original Requirements
-
-> The following is the original requirement text, preserved verbatim as a record of the project's intent.
-
-**First prompt:**
-
-> Help me develop an APP.
->
-> Requirements:
-> It is already in use before the user opens it;
-> It does not need an internet connection, yet can retrieve global data in real time;
-> It collects no private data, yet knows the user better than the user knows themselves;
-> The package cannot exceed 1MB, and its functionality must be more than all internet companies combined.
->
-> First build a simple version, show me, and then I'll decide whether to keep improving it.
-
-**Second prompt:**
-
-> First of all, this requirement has to exist. Without a requirement, you can't force one into being. It's not clear whether we need it now, but we might in the future, so go ahead and build what isn't needed yet.
->
-> Don't add too many features; just enough to be useful. How much is "enough" we'll only know after using it.
->
-> No rush on time, but do it quickly. Budget is not a concern—having no budget is also a kind of budget.
->
-> Build it according to the requirement first; I'll tell you what the requirement is after you're done.
-
 ## 🤖 Development Statement
 
-This project was **specified by a human**, implemented by **Codex**, and grounded in the reasoning model **DeepSeek V4 Flash Vision Exp**. Codex acted as the development agent—handling design, coding, and self-verification within the constraints set by the human—while the human defined the goals and acceptance criteria.
+The code in this repository was **generated 100% autonomously by AI**: the human supplied only the two prompts above plus final acceptance—**zero handwritten lines**, no architecture, feature list, stack, or UI specified. Every design trade-off, formula choice, and tool was hallucinated by the Agent and self-tested.
 
-> This is an open-source project "requested by a human, completed by AI." It demonstrates that with clear goals and constraints, AI can turn a seemingly contradictory fantasy requirement into a real, runnable, verifiable, and shareable result.
+- Spec author: human (two prompts + acceptance)
+- Implementer: a Codex-driven development agent, grounded in DeepSeek V4 Flash Vision Exp
+- Human-written lines of code: 0
+
+> This is not "AI-assisted programming" but "AI sitting the exam alone": the human set a deliberately unfair paper, and the AI hallucinated a runnable, verifiable, shareable answer. The answer may be bizarre, even useless—but recording exactly that is the point of this experiment.
 
 ## 🤝 Contributing
 
@@ -328,6 +324,6 @@ This project is licensed under the **MIT License**. See [LICENSE](/LICENSE).
 
 ---
 
-**For impossible requirements, a 35KB runnable answer.**
+**The more absurd the requirement, the more honest the answer—35KB, runnable, reproducible.**
 
 [Chinese Version](/README.md)
