@@ -1,4 +1,4 @@
-# 1MB — Single-File Offline Utility Suite
+# Paradox-1MB — A Single-File Paradox App Born from Impossible Prompts
 
 <p align="center">
   <img src="https://img.shields.io/badge/Size-%3C1MB-6ee7b7?style=flat-square" alt="Size">
@@ -12,11 +12,11 @@
 
 ---
 
-> 🌐 **Live Demo:** [https://lucas-qh-lai.github.io/1mb/](https://lucas-qh-lai.github.io/1mb/)
+> 🌐 **Live Demo:** [https://lucas-qh-lai.github.io/paradox-1mb/](https://lucas-qh-lai.github.io/paradox-1mb/)
 
-**A deliberately tiny offline utility that packs far more than 1MB of functionality into a single file.**
+**A runnable answer to "impossible requirements": already "in use" before you open it, "global data" with no network, and knows your current moment better than you do—without collecting anything.**
 
-You haven't even opened it yet, and it is already "in use"—because its "global data" is derived live from local algorithms and your device state, not from some distant server. It needs no network, collects no private data, and yet reflects the context of your current moment more closely than any single app: the current time, entropy, moon phase, solar altitude, battery level, device orientation, and the notes and todos you keep locally.
+All "live global data"—clock, entropy, moon phase, solar altitude, battery, device orientation—is derived on-device from local algorithms and device state, not from a distant server. No network, no data collection, yet it stays close to your present context: what time it is, how full the moon is, how high the sun stands, how much battery remains, and the todos and notes you keep locally.
 
 It is a single file. Double-click it and it runs.
 
@@ -35,6 +35,7 @@ It is a single file. Double-click it and it runs.
 - [Performance & Size](#-performance--size)
 - [Offline & Privacy](#-offline--privacy)
 - [Security Notes](#-security-notes)
+- [The Impossible Prompts](#-the-impossible-prompts)
 - [Original Requirements](#-original-requirements)
 - [Development Statement](#-development-statement)
 - [Contributing](#-contributing)
@@ -45,7 +46,7 @@ It is a single file. Double-click it and it runs.
 
 ## ❓ What Is This Project
 
-`1MB` is a **single-file, zero-dependency, fully offline** frontend application. The entire app is bundled into one `outputs/1mb.html`, roughly **35KB**, far below the 1MB ceiling.
+`Paradox-1MB` is a **single-file, zero-dependency, fully offline** frontend application. The entire app is bundled into one `outputs/paradox-1mb.html`, roughly **35KB**—about 3.4% of the 1MB ceiling.
 
 It calls no backend, requests no external API, loads no CDN assets, and writes to no remote store. All "live global data"—clock, entropy, moon phase, solar altitude, world-city times—is computed locally in the browser using deterministic formulas and whatever device APIs are available. Your local browser is its only runtime.
 
@@ -53,7 +54,7 @@ It calls no backend, requests no external API, loads no CDN assets, and writes t
 
 ## 🧠 Why Build It
 
-Modern apps have gravitated toward "cloud-first," and the cost is real: you must be online, register an account, upload data, and install packages that routinely weigh in at tens or hundreds of megabytes. `1MB` tries a different trade-off—**compute locally whatever can be computed locally**.
+Modern apps have gravitated toward "cloud-first," and the cost is real: you must be online, register an account, upload data, and install packages that routinely weigh in at tens or hundreds of megabytes. `Paradox-1MB` tries a different trade-off—**compute locally whatever can be computed locally**. It starts from two near-absurd prompts (see [The Impossible Prompts](#-the-impossible-prompts)); its answer is to translate every paradox into runnable local logic, literally.
 
 We believe a tool that truly knows you should be:
 
@@ -62,7 +63,7 @@ We believe a tool that truly knows you should be:
 - **Extremely light**: small enough to live anywhere, double-click to run, no installation.
 - **Dense in functionality**: within offline constraints, pack in as many everyday tools as possible, so you never install a whole app for a single feature.
 
-This is not a boast about replacing every internet company's features with 1MB—it is an exploration of **efficiency, privacy, and autonomy**: keep data on-device, and hand control back to the user.
+This is not a boast about replacing every internet company's features with one tiny file—it is an exploration of **efficiency, privacy, and autonomy**: keep data on-device, and hand control back to the user.
 
 ## ✨ Key Highlights
 
@@ -163,7 +164,7 @@ This is not a boast about replacing every internet company's features with 1MB�
 
 ### Open Directly
 
-1. Download `outputs/1mb.html` from the repository.
+1. Download `outputs/paradox-1mb.html` from the repository.
 2. **Double-click** it with any modern browser (Chrome / Edge / Safari / Firefox).
 3. No install, no registration, no server—start using it immediately.
 
@@ -185,12 +186,12 @@ python3 -m http.server 8080
 - Press `Esc` or click the backdrop to close the current tool.
 - In the **Notes** view, type and press Enter or click "Add" to save locally.
 
-> You can also try it directly on GitHub Pages: [https://lucas-qh-lai.github.io/1mb/](https://lucas-qh-lai.github.io/1mb/)
+> You can also try it directly on GitHub Pages: [https://lucas-qh-lai.github.io/paradox-1mb/](https://lucas-qh-lai.github.io/paradox-1mb/)
 
 ## 📁 Directory Structure
 
 ```text
-app-1mb/
+paradox-1mb/
 ├── README.md            # Chinese README
 ├── README.en.md         # English README (this file)
 ├── outputs/
@@ -210,7 +211,7 @@ app-1mb/
 
 ## 📏 Performance & Size
 
-- **Size**: `outputs/1mb.html` is ~35KB (< 1MB limit).
+- **Size**: `outputs/paradox-1mb.html` is ~35KB (< 1MB limit).
 - **Load**: a single local file, no network latency.
 - **Runtime**: local computation, no server round-trips, instant interaction.
 - **Memory**: single-page, no background tasks, released on close.
@@ -218,7 +219,7 @@ app-1mb/
 
 ## 🔒 Offline & Privacy
 
-`1MB` follows these principles:
+`Paradox-1MB` follows these principles:
 
 - **Zero network requests**: the app makes no XHR / fetch / WebSocket calls.
 - **Zero external resources**: no CDN, font, image, or script is loaded.
@@ -238,6 +239,35 @@ app-1mb/
 - Todo text is escaped during rendering to prevent XSS.
 - The app requests no unnecessary permissions and does not access storage, camera, microphone, location, or other sensitive capabilities.
 - All data stays local; nothing is uploaded or shared.
+
+## 🌀 The Impossible Prompts
+
+> This is the soul of the project: two delightfully absurd original prompts, and how each line was translated into a working feature. The verbatim source is preserved in [Original Requirements](#-original-requirements); this section dissects it.
+
+### Prompt 1: four paradoxes, one "simple version" review
+
+> Already in use before the user opens it; no internet connection, yet live global data; collects no private data, yet knows the user better than the user knows themselves; package under 1MB, with more functionality than all internet companies combined.
+
+| Paradox | Literal reading | Implementation |
+| --- | --- | --- |
+| Already in use before opened | Effective before launch | Instant-on: clock, waveform, entropy, moon phase, and battery are already computing live on the dashboard at load—no login, config, or manual refresh |
+| Offline, yet live global data | Offline yet globally live | "Global data" derived locally: clock, world-city times, entropy, moon phase, and solar altitude computed on-device from deterministic formulas and device APIs, zero network requests |
+| Zero collection, yet knows you better | Zero collection yet deeper knowledge | Only the present context is read: current time, battery, orientation, and the todos/notes you keep locally—what it knows is "your current state," never "your identity" |
+| Under 1MB, yet more than everything | Tiny yet vast | A single ~35KB file (3.4% of the cap) with a live dashboard + 17 offline tools: calc, converters, passwords, hashing, color, fractals, audio, timers, world clock, todos |
+
+"First build a simple version and show me"—this repository *is* that simple version: one file, double-click to run, fully offline.
+
+### Prompt 2: the requirement about "requirement"
+
+> First of all, this requirement has to exist. Without a requirement, you can't force one into being. It's not clear whether we need it now, but we might in the future, so go ahead and build what isn't needed yet. Don't add too many features; just enough to be useful. How much is "enough" we'll only know after using it. No rush on time, but do it quickly. Budget is not a concern—having no budget is also a kind of budget. Build it according to the requirement first; I'll tell you what the requirement is after you're done.
+
+Tongue-twister on the surface, real constraints underneath: **requirements will change, so the architecture must be complete and self-contained from day one**. Hence:
+
+- "Build what isn't needed yet" → 17 tools shipped at once, covering calc, text, encoding, time, and notes
+- "Enough is known only after use" → the toolbox has instant search; search to judge "enough," then extend—still offline
+- "No rush, but quickly" → single file, no build, no dependencies: edit and run, no compile or deploy wait
+- "No budget is also a budget" → zero servers, zero APIs, zero cost: hosted on GitHub Pages, runnable by double-click offline
+- "I'll tell you the requirement after you're done" → the verbatim prompts stay in the next section; code is the answer sheet, prompts are the exam—grade away
 
 ## 📜 Original Requirements
 
@@ -298,6 +328,6 @@ This project is licensed under the **MIT License**. See [LICENSE](/LICENSE).
 
 ---
 
-**With less than 1MB, do one thing that respects you—without a server.**
+**For impossible requirements, a 35KB runnable answer.**
 
 [Chinese Version](/README.md)
